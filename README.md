@@ -65,3 +65,55 @@ Leverage the Async.js library or mongo $lookup aggregation capability to join th
 - https://cloud.google.com/appengine/docs/flexible/nodejs/integrating-with-analytics
 - https://caolan.github.io/async/index.html
 - https://support.google.com/analytics/answer/2709829
+
+# CSC3916 Assignment 4 - Movie Review API
+
+## Description
+This project builds on Assignment 3 by adding a Reviews collection to MongoDB that is tied to the existing Movies collection. Users can query a movie and receive its title, release date, and actors as before, and optionally include all reviews for that movie by passing `?reviews=true` as a query parameter. The API also leverages Google Analytics to gather information about the requests being sent in by users, tracking how many times each movie is reviewed.
+
+## Installation
+
+```bash
+git clone https://github.com/kennermatt-ucd/CSC3916_HW4.git
+cd CSC3916_HW4
+npm install
+```
+
+Create a `.env` file in the root directory with the environment variables listed below, then run:
+
+```bash
+node server.js
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | /signup | Register a new user | No |
+| POST | /signin | Login and receive JWT token | No |
+| GET | /movies | Get all movies | Yes |
+| POST | /movies | Add a new movie | Yes |
+| GET | /movies/:id | Get one movie | Yes |
+| GET | /movies/:id?reviews=true | Get movie with all reviews | Yes |
+| PUT | /movies/:id | Update a movie | Yes |
+| DELETE | /movies/:id | Delete a movie | Yes |
+| GET | /reviews | Get all reviews | Yes |
+| POST | /reviews | Add a review for a movie | Yes |
+
+## Environment Variables
+
+```
+PORT=8080
+DB=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>
+SECRET_KEY=<your_jwt_secret>
+GA_MEASUREMENT_ID=<your_ga4_measurement_id>
+GA_API_SECRET=<your_ga4_api_secret>
+```
+
+## Submission Links
+
+**Render:** https://csc3916-hw4-jk2l.onrender.com
+
+**Postman Collection:** [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/51680579-2f40cb34-19c6-40d6-ac3b-a13c9ab4bf19?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D51680579-2f40cb34-19c6-40d6-ac3b-a13c9ab4bf19%26entityType%3Dcollection%26workspaceId%3D05391b1f-9401-4d6b-93ec-7aa02dd182c3)
+
+**Google Analytics:** https://analytics.google.com/analytics/web/?authuser=1#/a388645834p529699595/realtime/overview?params=_u..nav%3Dmaui
