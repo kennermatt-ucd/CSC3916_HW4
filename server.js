@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var cors = require('cors');
 const crypto = require('crypto');
 var rp = require('request-promise');
+var mongoose = require('mongoose');
 var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
@@ -129,7 +130,7 @@ router.route('/movies/:id')
         try {
             if (req.query.reviews === 'true') {
                 const result = await Movie.aggregate([
-                    { $match: { _id: new require('mongoose').Types.ObjectId(req.params.id) } },
+                    { $match: { _id: new mongoose.Types.ObjectId(req.params.id) } },
                     {
                         $lookup: {
                             from: 'reviews',
