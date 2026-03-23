@@ -5,9 +5,40 @@ var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
+const crypto = require('crypto');
+var rp = require('request-promise');
 var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
+
+const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID;
+const GA_API_SECRET = process.env.GA_API_SECRET;
+
+function trackDimension(category, action, label, value, dimension, metric) {
+    var options = {
+        method: 'POST',
+        url: `https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${GA_API_SECRET}`,
+        body: JSON.stringify({
+            client_id: crypto.randomBytes(16).toString("hex"),
+            events: [{
+                name: 'movie_review',
+                params: {
+                    event_category: category,
+                    event_action: action,
+                    event_label: label,
+                    value: parseInt(value),
+                    movie_name: dimension,
+                    review_count: parseInt(metric)
+                }
+            }]
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    };
+    return rp(options);
+}
 
 var app = express();
 app.use(cors());
@@ -163,6 +194,19 @@ router.route('/reviews')
             }
             const newReview = new Review({ movieId, username, review, rating });
             await newReview.save();
+
+            // Fire GA event (extra credit) - don't await so it doesn't block the response
+            if (GA_MEASUREMENT_ID) {
+                trackDimension(
+                    movie.genre,          // Event Category: genre of movie
+                    'post /reviews',      // Event Action: URL path
+                    'API Request for Movie Review', // Event Label
+                    '1',                  // Event Value
+                    movie.title,          // Custom Dimension 1: movie name
+                    '1'                   // Custom Metric 1
+                ).catch(err => console.error('GA tracking error:', err));
+            }
+
             res.json({ message: 'Review created!' });
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
