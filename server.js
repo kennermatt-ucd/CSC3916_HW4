@@ -249,7 +249,18 @@ router.route('/search')
             const conditions = [];
             if (title) conditions.push({ title: { $regex: title, $options: 'i' } });
             if (actorName) conditions.push({ 'actors.actorName': { $regex: actorName, $options: 'i' } });
-            const movies = await Movie.find({ $or: conditions });
+            const movies = await Movie.aggregate([
+                { $match: { $or: conditions } },
+                {
+                    $lookup: {
+                        from: 'reviews',
+                        localField: '_id',
+                        foreignField: 'movieId',
+                        as: 'reviews'
+                    }
+                },
+                { $addFields: { avgRating: { $avg: '$reviews.rating' } } }
+            ]);
             res.json(movies);
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
