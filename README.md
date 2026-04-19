@@ -118,3 +118,5 @@ GA_API_SECRET=<your_ga4_api_secret>
 **Postman Environment:** kenner-hw4.postman_environment.json
 
 **Google Analytics:** https://analytics.google.com/analytics/web/?authuser=1#/a388645834p529699595/realtime/overview?params=_u..nav%3Dmaui
+
+![alt text](movie_review_GA.png)
