@@ -246,10 +246,10 @@ router.route('/search')
             return res.status(400).json({ success: false, message: 'Provide a title or actorName to search.' });
         }
         try {
-            const query = {};
-            if (title) query.title = { $regex: title, $options: 'i' };
-            if (actorName) query['actors.actorName'] = { $regex: actorName, $options: 'i' };
-            const movies = await Movie.find(query);
+            const conditions = [];
+            if (title) conditions.push({ title: { $regex: title, $options: 'i' } });
+            if (actorName) conditions.push({ 'actors.actorName': { $regex: actorName, $options: 'i' } });
+            const movies = await Movie.find({ $or: conditions });
             res.json(movies);
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
