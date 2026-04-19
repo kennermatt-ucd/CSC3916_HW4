@@ -239,6 +239,23 @@ router.route('/reviews')
         }
     });
 
+router.route('/search')
+    .post(authJwtController.isAuthenticated, async (req, res) => {
+        const { title, actorName } = req.body;
+        if (!title && !actorName) {
+            return res.status(400).json({ success: false, message: 'Provide a title or actorName to search.' });
+        }
+        try {
+            const query = {};
+            if (title) query.title = { $regex: title, $options: 'i' };
+            if (actorName) query['actors.actorName'] = { $regex: actorName, $options: 'i' };
+            const movies = await Movie.find(query);
+            res.json(movies);
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    });
+
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
 module.exports = app;
