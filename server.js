@@ -96,8 +96,28 @@ router.post('/signin', async (req, res) => {
 router.route('/movies')
     .get(authJwtController.isAuthenticated, async (req, res) => {
         try {
-            const movies = await Movie.find();
-            res.json(movies);
+            if (req.query.reviews === 'true') {
+                const movies = await Movie.aggregate([
+                    {
+                        $lookup: {
+                            from: 'reviews',
+                            localField: '_id',
+                            foreignField: 'movieId',
+                            as: 'reviews'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            avgRating: { $avg: '$reviews.rating' }
+                        }
+                    },
+                    { $sort: { avgRating: -1 } }
+                ]);
+                res.json(movies);
+            } else {
+                const movies = await Movie.find();
+                res.json(movies);
+            }
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
         }
@@ -137,6 +157,11 @@ router.route('/movies/:id')
                             localField: '_id',
                             foreignField: 'movieId',
                             as: 'reviews'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            avgRating: { $avg: '$reviews.rating' }
                         }
                     }
                 ]);

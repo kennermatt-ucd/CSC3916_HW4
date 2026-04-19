@@ -31,6 +31,7 @@ const MovieSchema = new Schema({
     actorName: String,
     characterName: String,
   }],
+  imageUrl: { type: String },
 });
 
 const Movie = mongoose.model('Movie', MovieSchema);
@@ -48,7 +49,8 @@ const seedMovies = async () => {
             { actorName: 'Christian Bale', characterName: 'Bruce Wayne' },
             { actorName: 'Heath Ledger', characterName: 'Joker' },
             { actorName: 'Aaron Eckhart', characterName: 'Harvey Dent' }
-          ]
+          ],
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg'
         },
         {
           title: 'Inception',
@@ -58,7 +60,8 @@ const seedMovies = async () => {
             { actorName: 'Leonardo DiCaprio', characterName: 'Dom Cobb' },
             { actorName: 'Joseph Gordon-Levitt', characterName: 'Arthur' },
             { actorName: 'Ellen Page', characterName: 'Ariadne' }
-          ]
+          ],
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg'
         },
         {
           title: 'The Shawshank Redemption',
@@ -68,7 +71,8 @@ const seedMovies = async () => {
             { actorName: 'Tim Robbins', characterName: 'Andy Dufresne' },
             { actorName: 'Morgan Freeman', characterName: 'Ellis Boyd' },
             { actorName: 'Bob Gunton', characterName: 'Warden Norton' }
-          ]
+          ],
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/8/81/ShawshankRedemptionMoviePoster.jpg'
         },
         {
           title: 'The Silence of the Lambs',
@@ -78,7 +82,8 @@ const seedMovies = async () => {
             { actorName: 'Jodie Foster', characterName: 'Clarice Starling' },
             { actorName: 'Anthony Hopkins', characterName: 'Hannibal Lecter' },
             { actorName: 'Scott Glenn', characterName: 'Jack Crawford' }
-          ]
+          ],
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/8/86/The_Silence_of_the_Lambs_poster.jpg'
         },
         {
           title: 'The Lord of the Rings: The Fellowship of the Ring',
@@ -88,7 +93,8 @@ const seedMovies = async () => {
             { actorName: 'Elijah Wood', characterName: 'Frodo Baggins' },
             { actorName: 'Ian McKellen', characterName: 'Gandalf' },
             { actorName: 'Viggo Mortensen', characterName: 'Aragorn' }
-          ]
+          ],
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg'
         }
       ]);
       console.log('Seeded 5 movies');
