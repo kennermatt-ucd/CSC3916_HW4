@@ -114,6 +114,7 @@ GA_API_SECRET=<your_ga4_api_secret>
 
 **Render:** https://csc3916-hw4-jk2l.onrender.com
 
-**Postman Collection:** [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/51680579-2f40cb34-19c6-40d6-ac3b-a13c9ab4bf19?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D51680579-2f40cb34-19c6-40d6-ac3b-a13c9ab4bf19%26entityType%3Dcollection%26workspaceId%3D05391b1f-9401-4d6b-93ec-7aa02dd182c3)
+**Postman Collection:** CSC3916_HW4.postman_collection.json
+**Postman Environment:** kenner-hw4.postman_environment.json
 
 **Google Analytics:** https://analytics.google.com/analytics/web/?authuser=1#/a388645834p529699595/realtime/overview?params=_u..nav%3Dmaui

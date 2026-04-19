@@ -1,0 +1,390 @@
+{
+  "info": {
+    "_postman_id": "2f40cb34-19c6-40d6-ac3b-a13c9ab4bf19",
+    "name": "CSC3916_HW4",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51680579",
+    "_collection_link": "https://go.postman.co/collection/51680579-2f40cb34-19c6-40d6-ac3b-a13c9ab4bf19?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "signup",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"randomUser\", \"user_\" + Math.random().toString(36).substring(2,8));\r",
+              "pm.environment.set(\"randomPass\", \"pass_\" + Math.random().toString(36).substring(2,8));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Signup returns success status\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});\r",
+              "\r",
+              "var data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Signup success is true\", function () {\r",
+              "    pm.expect(data.success).to.eql(true);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Test User\",\r\n  \"username\": \"{{randomUser}}\",\r\n  \"password\": \"{{randomPass}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/signup",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "signup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "signin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Signin returns 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "var data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Token exists\", function () {\r",
+              "    pm.expect(data.token).to.not.be.undefined;\r",
+              "});\r",
+              "\r",
+              "// Store token in environment\r",
+              "pm.environment.set(\"jwt_token\", data.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"{{randomUser}}\",\r\n  \"password\": \"{{randomPass}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/signin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "signin"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "all movies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Get all movies returns 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "var data = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Response is an array\", function () {\r",
+              "    pm.expect(data).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Movies array is not empty\", function () {\r",
+              "    pm.expect(data.length).to.be.above(0);\r",
+              "});\r",
+              "pm.environment.set(\"movie_id\", data[0]._id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/movies",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "invalid movie request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Returns 404 for movie not in DB\", function () {\r",
+              "      pm.response.to.have.status(404);\r",
+              "  });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/movies/000000000000000000000000",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "movies",
+            "000000000000000000000000"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "save review - valid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Review created successfully\", function () {\r",
+              "    pm.response.to.have.status(200);   \r",
+              "    pm.expect(pm.response.json().message).to.equal(\"Review created!\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"movieId\": \"{{movie_id}}\",\r\n    \"username\": \"{{randomUser}}\",\r\n    \"review\": \"An absolutely fantastic film!\",                                                                                                             \"rating\": 5\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/reviews",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "save review - invalid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Review created successfully\", function () {\r",
+              "    pm.response.to.have.status(200);   \r",
+              "    pm.expect(pm.response.json().message).to.equal(\"Review created!\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"movieId\": \"{{movie_id}}\",\r\n    \"username\": \"{{randomUser}}\",\r\n    \"review\": \"An absolutely fantastic film!\",                                                                                                             \"rating\": 5\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/reviews",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get movie with reviews",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Returns 200 with reviews array\", function () {\r",
+              "    pm.response.to.have.status(200);      \r",
+              "    pm.expect(pm.response.json()).to.have.property(\"reviews\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/movies/{{movie_id}}?reviews=true",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "movies",
+            "{{movie_id}}"
+          ],
+          "query": [
+            {
+              "key": "reviews",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
